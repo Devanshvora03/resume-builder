@@ -4,7 +4,7 @@ import subprocess
 from pathlib import Path
 import os
 import io
-import shutil  # Add this for cross-platform executable checking
+import shutil
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
@@ -23,12 +23,10 @@ def create_pdf_from_file(file_content, output_filename='output'):
         f.write(file_content)
     
     try:
-        # Check if pdflatex is available (cross-platform)
         pdflatex_path = shutil.which('pdflatex')
         if not pdflatex_path:
-            return None, False, "Error: pdflatex not found in environment. Please install a LaTeX distribution (e.g., MiKTeX or TeX Live)."
+            return None, False, "Error: pdflatex not found in environment."
         
-        # Run pdflatex twice
         cmd = ['pdflatex', '-interaction=nonstopmode', str(tex_file)]
         for _ in range(2):
             process = subprocess.run(
@@ -36,7 +34,7 @@ def create_pdf_from_file(file_content, output_filename='output'):
                 capture_output=True,
                 text=True,
                 cwd=temp_dir,
-                env={**os.environ, "HOME": str(temp_dir)} if os.name != 'nt' else os.environ  # Use HOME only on non-Windows
+                env={**os.environ, "HOME": str(temp_dir)} if os.name != 'nt' else os.environ
             )
             if process.returncode != 0:
                 return None, False, f"pdflatex failed with error:\n{process.stderr}"
@@ -85,4 +83,5 @@ def index():
     return render_template('index.html', output_name="document")
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    port = int(os.environ.get("PORT", 5000))  # Use Render's PORT or default to 5000
+    app.run(host='0.0.0.0', port=port, debug=True)
