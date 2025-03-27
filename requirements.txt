@@ -1,2 +1,6 @@
 flask
 werkzeug
+groq
+pdfplumber
+python-docx
+python-dotenv

@@ -12,9 +12,15 @@ WORKDIR /home/appuser
 
 COPY requirements.txt .
 COPY app.py .
+COPY llm_processor.py .
+COPY preamble.tex .
 COPY templates/ templates/
 
 RUN pip3 install --user -r requirements.txt
+
+ENV TEXMFVAR=/home/appuser/.texmf-var
+RUN mkdir -p $TEXMFVAR
+RUN mkdir -p /home/appuser/logs
 
 EXPOSE $PORT
 

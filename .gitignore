@@ -1,4 +1,8 @@
 env
-temp_latex
-ocr.py
 latex.txt
+app1.py
+.env
+app.log
+temp_latex/
+temp_pdf/
+__pycache__/
